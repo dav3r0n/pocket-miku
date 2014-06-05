@@ -1,0 +1,249 @@
+\documentclass[titlepage]{article}
+
+%
+% Notes on the Gakken NSX-39 ``Pocket Miku''
+% Copyright (C) 2014  Matthew Skala
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, version 3.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
+% Matthew Skala
+% http://ansuz.sooke.bc.ca/
+% mskala@ansuz.sooke.bc.ca
+%
+
+\usepackage{fontspec}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{tikz}
+\usepackage{xltxtra}
+
+% colors
+\definecolor{darkgreen}{rgb}{0,0.35,0}
+\definecolor{purplish}{rgb}{0.4,0,0.6}
+
+\usepackage[letterpaper,breaklinks,bookmarks,plainpages=false,
+   colorlinks,citecolor=darkgreen,linkcolor=purplish]{hyperref}
+
+\defaultfontfeatures{Mapping=tex-text,Path=./}
+\newfontfamily\mincho{TsukurimashouMinchoPS}
+
+\newcommand{\futatsutomoe}{{\fontspec[RawFeature=+ornm]{TsukurimashouMinchoPS}B}}
+
+\renewcommand{\labelitemi}{{\fontspec[RawFeature=+ornm]{TsukurimashouMinchoPS}C}}
+
+\title{Notes on the Gakken NSX-39 ``Pocket Miku''}
+\author{Matthew Skala,
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+The Gakken NSX-39 ``Pocket Miku'' is a music synthesizer included with the
+April 2014 issue of the Japanese magazine {\mincho 「大人の科学」}
+(\textit{Otona no Kagaku}, ``Science for Adults''), which usually includes
+some kind of science project or gadget in each issue.  The NSX-39 is a small
+electronic device resembling an external dialup modem circa 1995.  It can be
+used standalone (powered by three AAA batteries and controlled with the
+built-in stylophone), or connected to a computer with USB (requires a
+micro-B USB cable, not included with the device).  It includes a
+stylophone-type 27-note musical keyboard with a continuous-tone ``ribbon
+controller'' section; a more or less complete General MIDI synthesizer
+module with a class-compliant USB-MIDI interface (no device-specific driver
+required on the computer); and a singing synthesizer based on Yamaha
+``Vocaloid'' synthesis technology, featuring the famous ``Hatsune Miku''
+synthesized voice.  Output is through a built-in piezo speaker (mono, and
+almost no bass) or a standard 1/8'' headphone jack socket (stereo, full
+range).
+
+This document is intended to provide helpful information and notes for
+users of the NSX-39, especially those outside Japan.
+
+\subsection{Important warnings}
+
+Please note that \textbf{the booklet that comes with the device is entirely
+in Japanese}.  If you cannot read Japanese, then the booklet that comes with
+it will be of little use to you.  This document exists partly to fill that
+gap.  The controls on the device, however, are labelled in English, and one
+of the optional stickers that comes with it is an English-language quick
+reference to the controls.
+
+Similarly, \textbf{the ``vocaloid'' synthesizer is designed to sing only in
+Japanese}, and the manufacturer's online service for programming it
+functions only in Japanese.  Programming it to sing in any language other
+than Japanese is tricky (but this document and the associated software
+should help), and the results will be so heavily Japanese-accented as
+to be barely comprehensible.
+
+Furthermore, note that because the device was only intended for sale within
+Japan, if you are outside Japan then \textbf{you are on your own regarding
+regulatory compliance issues} like RoHS, RF interference, safety labelling,
+environmental fees, and any other requirements your country may impose on
+electronic devices.  The litany of safety certifications, warning notices,
+and test-lab logos usually found in the manuals of internationally-sold
+electronic devices, is conspicuously absent from the Pocket Miku's manual. 
+Depending on where you live, it may not be technically legal for you to
+re-sell (or maybe even to use) this device.  And if it causes an
+electrical fire, your insurance company may give you a hard time.
+
+Finally, note that there is a long complicated license agreement on the
+inside back cover of the manual, all in Japanese legalese, which I imagine
+the corporations involved would claim is binding on you whether you can
+understand it or not.  I think it says you're not allowed to make anime
+porn videos of the ``Hatsune Miku'' character, which of course hasn't
+stopped anybody\footnote{She's sixteen, you perverts!}; but I'm a little
+more concerned about whether it might attempt to place \textbf{copyright
+claims on music you make}.  So far I haven't deciphered it far enough to be
+sure.
+
+\subsection{This document, and contact information}
+
+An up-to-date version of this document should be available from
+\url{http://ansuz.sooke.bc.ca/pocket-miku.pdf}.  I expect to improve it from
+time to time, so if the date on the front cover of your copy is not recent,
+you may want to check for a new one.
+
+Source code for this document, and associated software, is available from
+\url{https://github.com/mskala/pocket-miku}.  To compile the document you
+will need \XeTeX\ and the font {\mincho Tsukurimashou Mincho PS}, available
+from \url{http://tsukurimashou.sourceforge.jp/}.
+
+I welcome suggestions and information for inclusion in this document. 
+Contact me by email at
+\href{mailto:mskala@ansuz.sooke.bc.ca}{mskala@ansuz.sooke.bc.ca}.  Other
+places of interest the synthesists where I can be found include the
+Muffwiggler Forum as mskala (but please, use email in preference to
+private-messaging there); on Twitter as
+\href{https://twitter.com/mattskala}{mattskala}; and on Soundcloud as
+\href{https://soundcloud.com/matt-skala}{matt-skala}.
+
+\section{Front-panel controls}
+
+\section{The stylophone keyboard}
+
+\section{Programming the Vocaloid}
+
+\section{MIDI synthesis}
+
+The NSX-39's MIDI synthesizer seems to be somewhere between General MIDI
+(original, not ``2'') and Yamaha's XG MIDI extension.  It supports many, but
+apparently not all, of the XG extensions to General MIDI.
+
+If you wish to use MIDI percussion then \textbf{the percussion channel must
+be set to drum kit bank MSB 127, LSB 0}.  This is the power-on default for
+MIDI channel 10, the default percussion channel; it is also the standard
+drum kit for XG MIDI.  However, the Rosegarden sequencer (and possibly
+others) will, unless specificaly configured otherwise, automatically
+reinitialize percussion channels to MSB 0, LSB 1, which would be the GM
+standard drum kit; and on that setting percussion will produce no sound.  I
+have not tried every single one of the more than 16000 possible settings,
+but it appears that the NSX-39 contains no other drum kits except MSB 127,
+LSB 0.
+
+The NSX-39's XG standard drum kit is a superset of the General MIDI standard
+kit, containing some extra sounds.  Here is the complete list as seen in the
+XG specification:
+
+\begin{tabular}{cc}
+  MIDI note \# & name \\ \hline
+  13 & Surdo Mute \\
+  14 & Surdo Open \\
+  15 & Hi Q \\
+  16 & Whip Slap \\
+  17 & Scratch H \\
+  18 & Scratch L \\
+  19 & Finger Snap \\
+  20 & Click Noise \\
+  21 & Metronome Click \\
+  22 & Metronome Bell \\
+  23 & Seq Click L \\
+  24 & Seq Click H \\
+  25 & Brush Tap \\
+  26 & Brush Swirl \futatsutomoe \\
+  27 & Brush Slap \\
+  28 & Brush Tap Swirl \futatsutomoe \\
+  29 & Snare Roll \futatsutomoe \\
+  30 & Castanet \\
+  31 & Snare Soft \\
+  32 & Sticks \\
+  33 & Kick Soft \\
+  34 & Open Rim Shot \\
+  35 & Kick Tight \\
+  36 & Kick \\
+  37 & Side Stick \\
+  38 & Snare \\
+  39 & Hand Clap \\
+  40 & Snare Tight \\
+  41 & Floor Tom L \\
+  42 & Hi-Hat Closed \\
+  43 & Floor Tom H \\
+  44 & Hi-Hat Pedal \\
+  45 & Low Tom \\
+  46 & Hi-Hat Open \\
+  47 & Mid Tom L \\
+  48 & Mid Tom H
+\end{tabular}\qquad
+\begin{tabular}{cc}
+  MIDI note \# & name \\ \hline
+  49 & Crash Cymbal 1 \\
+  50 & High Tom \\
+  51 & Ride Cymbal 1 \\
+  52 & Chinese Cymbal \\
+  53 & Ride Cymbal Cup \\
+  54 & Tambourine \\
+  55 & Splash Cymbal \\
+  56 & Cowbell \\
+  57 & Crash Cymbal 2 \\
+  58 & Vibraslap \\
+  59 & Ride Cymbal 2 \\
+  60 & Bongo H \\
+  61 & Bongo L \\
+  62 & Conga H Mute \\
+  63 & Conga H Open \\
+  64 & Conga L \\
+  65 & Timbale H \\
+  66 & Timbale L \\
+  67 & Agogo H \\
+  68 & Agogo L \\
+  69 & Cabasa \\
+  70 & Maracas \\
+  71 & Samba Whistle H \futatsutomoe \\
+  72 & Samba Whistle L \futatsutomoe \\
+  73 & Guiro Short \\
+  74 & Guiro Long \futatsutomoe \\
+  75 & Claves \\
+  76 & Wood Block H \\
+  77 & Wood Block L \\
+  78 & Cuica Mute \\
+  79 & Cuica Open \\
+  80 & Triangle Mute \\
+  81 & Triangle Open \\
+  82 & Shaker \\
+  83 & Jingle Bells \\
+  84 & Bell Tree
+\end{tabular}
+
+The General MIDI sounds are numbers 35 to 81.  Sounds marked \futatsutomoe\
+can be extended arbitrarily; they function like notes in ordinary
+non-percussion channels, sounding from a Note ON message to the
+corresponding Note OFF message.  Such sounds may cause trouble with some
+computer sequencers (e.g.\ Rosegarden again), which sometimes send a Note ON
+message and never cancel it in percussion channels.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
