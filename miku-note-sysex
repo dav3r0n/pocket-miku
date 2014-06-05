@@ -1,0 +1,166 @@
+#!/usr/bin/perl -CSD
+
+#
+# NSX-39 syllable SYSEX generator
+# Copyright (C) 2014  Matthew Skala
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 3.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Matthew Skala
+# http://ansuz.sooke.bc.ca/
+# mskala@ansuz.sooke.bc.ca
+#
+
+use utf8;
+
+# hiragana table from back page of the NSX-39 user manual
+$_=<<EOF;
+あいうえお
+かきくけこ
+がぎぐげご
+きゃきゅきょ
+ぎゃぎゅぎょ
+さすぃすせそ
+ざずぃずぜぞ
+しゃししゅしぇしょ
+じゃじじゅじぇじょ
+たてぃとぅてと
+だでぃどぅでど
+てゅでぅ
+ちゃちちゅちぇちょ
+つぁつぃつつぇつぉ
+なにぬねの
+にゃにゅにょ
+はひふへほ
+ばびぶべぼ
+ぱぴぷぺぽ
+ひゃひゅひょ
+びゃびゅびょ
+ぴゃぴゅぴょ
+ふぁふぃふゅふぇふぉ
+まみむめも
+みゃみゅみょ
+やゆよ
+らりるれろ
+りゃりゅりょ
+わうぃうぇうぉ
+ん
+EOF
+
+# alternate spellings
+%alternate_spelling=(
+  'づぁ'=>'ざ',
+  'づぃ'=>'ずぃ',
+  'づ'=>'ず',
+  'づぇ'=>'ぜ',
+  'づぉ'=>'ぞ',
+  'ゐ'=>'うぃ',
+  'ゑ'=>'うぇ',
+  'を'=>'うぉ',
+);
+
+for ($i=0;/(\S([ぁぃぅぇぉゃゅょ]?))/g;$i++) {
+  $syllable_number{$1}=$i;
+}
+while (($from,$to)=each %alternate_spelling) {
+  $syllable_number{$from}=$syllable_number{$to};
+}
+
+# do it again, with katakana
+tr/ぁ-ん/ァ-ン/;
+for ($i=0;/(\S([ァィゥェォャュョ]?))/g;$i++) {
+  $syllable_number{$1}=$i;
+}
+while (($from,$to)=each %alternate_spelling) {
+  $from=~tr/ぁ-ん/ァ-ン/;
+  $syllable_number{$from}=$syllable_number{$to};
+}
+
+# Latin equivalent of the syllable table; note extra Ns
+$_=<<EOF;
+a i u e o
+ka ki ku ke ko
+ga gi gu ge go
+kya kyu kyo
+gya gyu gyo
+sa si su se so
+za zi zu ze zo
+sha shi shu she sho
+ja ji ju je jo
+ta ti tu te to
+da di du de do
+tyu dyu
+cha chi chu che cho
+tsa tsi tsu tse tso
+na ni nu ne no
+nya nyu nyo
+ha hi fu he ho
+ba bi bu be bo
+pa pi pu pe po
+hya hyu hyo
+bya byu byo
+pya pyu pyo
+fa fi fyu fe fo
+ma mi mu me mo
+mya myu myo
+ya yu yo
+ra ri ru re ro
+rya ryu ryo
+wa wi we wo
+N\\ m N J n
+EOF
+
+$i=0;
+foreach (split(/\s+/)) {
+  $syllable_number{$_}=$i;
+  $i++;
+}
+$i=0;
+foreach (split(/\s+/)) {
+  tr/a-z/A-Z/;
+  $syllable_number{$_}=$i unless defined $syllable_number{$_};
+  $i++;
+}
+
+# translate
+foreach (@ARGV) {
+  $sysex='F0 43 79 09 11 0A 00 ';
+  $syllables=0;
+  $unknown='';
+  while ($_ ne '') {
+    if (/^\s+(.*)$/) {
+      $_=$1;
+    } elsif (/^(...)(.*)$/ && defined $syllable_number{$1}) {
+      $syllables++;
+      $sysex.=sprintf('%02X ',$syllable_number{$1});
+      $_=$2;
+    } elsif (/^(..)(.*)$/ && defined $syllable_number{$1}) {
+      $syllables++;
+      $sysex.=sprintf('%02X ',$syllable_number{$1});
+      $_=$2;
+    } elsif (/^(.)(.*)$/ && defined $syllable_number{$1}) {
+      $syllables++;
+      $sysex.=sprintf('%02X ',$syllable_number{$1});
+      $_=$2;
+    } else {
+      /^(.)(.*)$/;
+      $unknown.=$1;
+      $_=$2;
+    }
+  }
+  $sysex.="F7\n";
+  print "warning, $syllables syllables\n"
+    if (($syllables==0) || ($syllables>16));
+  print "unknown characters $unknown\n" if $unknown ne '';
+  print $sysex;
+}
